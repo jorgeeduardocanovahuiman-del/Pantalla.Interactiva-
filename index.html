@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#432012">
+  <title>WALAC Museo | Mujer Capullana</title>
+  <style>
+    :root{
+      --ink:#421f12; --ink-2:#542718; --rust:#913b1d; --gold:#e8a900;
+      --gold-light:#f2bd55; --cream:#f5dfbd; --paper:#fff0d8; --teal:#398d91;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:#21120c;color:#fff;font-family:Arial,Helvetica,sans-serif}
+    body{display:flex;flex-direction:column;align-items:center;padding:12px 12px 28px}
+    .topbar{width:min(100%,1536px);display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 auto 10px;color:#f6dfbd}
+    .topbar strong{font-size:13px;letter-spacing:.16em;text-transform:uppercase;font-weight:700}
+    .mode-toggle{border:1px solid rgba(246,220,181,.45);background:#4a2617;color:#ffe6c4;border-radius:999px;padding:9px 15px;font-weight:700;font-size:12px;cursor:pointer}
+    .mode-toggle:hover{background:#68402a}
+    .museum-stage{position:relative;width:min(100%,1536px);aspect-ratio:3/2;overflow:hidden;container-type:inline-size;isolation:isolate;box-shadow:0 22px 70px rgba(0,0,0,.5);border-radius:8px}
+    .stage-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+    .stage-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(17,8,4,.03),rgba(17,8,4,.12));z-index:-1;pointer-events:none}
+    .stand-logo{display:none;}
+    .stand-logo img{width:100%;height:100%;object-fit:contain}
+    .screen-surface{position:absolute;left:6.55%;top:12.6%;width:87.9%;height:58.3%;overflow:hidden;clip-path:polygon(8% 0,91.4% 0,100% 100%,0 100%);background:#421f12;transform:translateZ(0);}
+    .screen-content{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;container-type:inline-size;background:radial-gradient(circle at 75% 9%,#9a471c 0,#6a2c14 34%,#421b0d 76%);}
+    .screen-content:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.26;background-image:linear-gradient(135deg,transparent 0 46%,rgba(245,180,70,.16) 46.2% 47%,transparent 47.2%),linear-gradient(45deg,transparent 0 55%,rgba(245,180,70,.11) 55.2% 56%,transparent 56.2%);background-size:110px 110px,145px 145px;}
+    .home-view{position:absolute;inset:0;display:block}
+    .hero-art{position:absolute;right:1.5%;top:0;width:54%;height:56%;object-fit:cover;object-position:center 26%;opacity:.92;filter:saturate(.92);-webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.35) 10%,#000 31%);mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.35) 10%,#000 31%)}
+    .hero-glow{position:absolute;right:15%;top:2%;width:32%;height:49%;border-radius:50%;background:rgba(224,153,38,.16);filter:blur(25px);pointer-events:none}
+    .brand-plaque{position:absolute;z-index:2;left:7.8%;top:3.3%;width:13.5%;height:17%;background:transparent;border-radius:8px;padding:.5%;display:flex;align-items:center;justify-content:center;box-shadow:none;}
+    .brand-plaque img{width:100%;height:100%;object-fit:contain}
+    .hero-copy{position:absolute;z-index:2;left:5.8%;top:22%;width:42%;color:var(--cream);text-align:center;padding:0 1.2%;}
+    .eyebrow{font-size:2.45cqw;letter-spacing:.16em;font-weight:500;margin:0 0 .6cqw;color:#f6d6ab}
+    .hero-title{font-family:Georgia,'Times New Roman',serif;font-size:4.45cqw;line-height:1;letter-spacing:.015em;margin:0;color:#fff0d8;font-weight:800;text-shadow:0 3px 9px rgba(0,0,0,.4);white-space:nowrap;}
+    .hero-subtitle{font-size:1.65cqw;line-height:1.28;margin:1.45cqw auto 0;max-width:96%;color:#f3d8b6;text-shadow:0 2px 5px rgba(0,0,0,.45)}
+    .gold-line{width:5.6cqw;height:.36cqw;min-height:3px;border-radius:10px;background:var(--gold);margin:1.3cqw auto 0}
+    .feature-grid{position:absolute;z-index:3;left:6.1%;right:6.1%;top:56%;height:41.5%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.45%;}
+    .feature-card{min-width:0;height:100%;padding:0;border:2px solid #efc487;border-radius:2.1cqw;background:#f3dfc0;font-family:Montserrat,'Segoe UI',Arial,sans-serif;color:var(--ink);overflow:hidden;cursor:pointer;text-align:left;display:flex;flex-direction:column;box-shadow:0 6px 16px rgba(0,0,0,.24);transition:transform .18s ease,box-shadow .18s ease;}
+    .feature-card:hover,.feature-card:focus-visible{transform:translateY(-.5cqw);box-shadow:0 12px 20px rgba(0,0,0,.35);outline:3px solid #ffc34d;outline-offset:2px}
+    .card-art{flex:0 0 auto;aspect-ratio:354/104;width:100%;position:relative;overflow:hidden;background:#efd9b6;display:block;}
+    .card-art img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;}
+    .card-art.vase img{object-position:center 49%;}
+    .card-art.quiz-art{background:radial-gradient(circle at 50% 45%,#f9e6c8,#e9bd7b)}
+    .quiz-mark{width:35%;aspect-ratio:1;border:1px solid rgba(122,57,28,.35);border-radius:22%;display:grid;place-items:center;color:#fff0d8;background:linear-gradient(145deg,#8a451f,#572713);box-shadow:0 6px 14px rgba(69,31,13,.28),inset 0 1px 0 rgba(255,238,210,.25);}
+    .card-copy{position:relative;flex:1;min-height:0;margin:-.5cqw 2.2% 2.4%;border-radius:1.6cqw;background:linear-gradient(180deg,#5a2a19,#4b2314);color:#fff0d8;padding:1.2cqw 21% .8cqw 6%;box-shadow:inset 0 1px 0 rgba(255,225,185,.14),0 -2px 6px rgba(60,25,10,.25);}
+    .card-copy h2{font-size:1.45cqw;line-height:1.08;margin:0 0 .7cqw;text-transform:uppercase;letter-spacing:.015em;}
+    .card-copy p{font-size:1.2cqw;line-height:1.25;margin:0;color:#f3ddc1;max-width:100%;}
+    .card-arrow{position:absolute;right:5%;top:50%;transform:translateY(-50%);width:3.5cqw;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:#e99b20;color:#4b2314;box-shadow:0 2px 5px rgba(0,0,0,.3);}
+    .card-arrow svg{width:46%;height:46%;display:block}
+
+    .content-view{display:none;position:absolute;inset:0;padding:2.6% 8.5% 0;color:#fff0d8;background:linear-gradient(120deg,rgba(61,27,13,.98),rgba(95,40,17,.96));}
+    .content-view.active{display:flex;flex-direction:column;}
+    .view-top{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid rgba(238,185,99,.4);padding-bottom:1%;flex:0 0 auto;}
+    .view-brand{display:flex;align-items:center;gap:1.7cqw;font-size:1.5cqw;letter-spacing:.17em;text-transform:uppercase;color:#ffe6c4;font-weight:800}
+    .view-brand img{width:5.4cqw;height:4.9cqw;object-fit:contain;background:transparent;flex:0 0 auto}
+    .back-button{border:1px solid #e8ab4d;background:rgba(39,17,9,.3);color:#ffe6c1;border-radius:999px;padding:.8cqw 1.5cqw;font-size:1.15cqw;font-weight:800;cursor:pointer;white-space:nowrap}
+    .back-button:hover{background:#e8ab4d;color:#421f12}
+    .view-main{flex:1;min-height:0;overflow:auto;padding:1.2% 0 1.6cqw;scrollbar-width:thin;scrollbar-color:#d28d39 transparent;}
+    .view-main::-webkit-scrollbar{width:7px}.view-main::-webkit-scrollbar-thumb{background:#c7832b;border-radius:20px}.view-main::-webkit-scrollbar-track{background:rgba(255,240,216,.08)}
+    .section-kicker{color:#f2b44b;font-size:1.15cqw;text-transform:uppercase;letter-spacing:.17em;font-weight:800;margin:0 0 .8cqw;}
+    .section-title{font-family:Georgia,'Times New Roman',serif;font-size:3.1cqw;line-height:1.02;margin:0 0 1cqw;color:#fff0d8;font-weight:800;}
+    .lead{font-size:1.32cqw;line-height:1.4;color:#f3ddc1;margin:0 0 1.2cqw;max-width:96%;}
+    .two-columns{display:grid;grid-template-columns:1.1fr .9fr;gap:2.3%;align-items:stretch;height:auto;}
+    .portrait-panel{min-height:330px;}
+    .info-panel{background:rgba(255,235,202,.1);border:1px solid rgba(237,177,84,.52);border-radius:1.5cqw;padding:1.3cqw 1.6cqw;}
+    .info-panel h3{font-size:1.15cqw;color:#f4bd63;margin:0 0 .5cqw;text-transform:uppercase;letter-spacing:.04em;}
+    .info-panel p{font-size:1.1cqw;line-height:1.36;color:#f8e5ca;margin:0 0 .9cqw;}
+    .portrait-panel{border-radius:1.5cqw;overflow:hidden;position:relative;min-height:0;background:#5c2a16;}
+    .portrait-panel img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 25%;}
+    .portrait-caption{position:absolute;left:0;right:0;bottom:0;padding:2.3cqw 2cqw 1.5cqw;background:linear-gradient(transparent,rgba(32,14,7,.95));font-size:1.25cqw;color:#ffe7c4;}
+    .fact-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3%;margin-top:1.2%;}
+    .fact-card{border:1px solid rgba(236,177,86,.55);border-radius:1.2cqw;padding:1.4cqw;background:rgba(255,239,211,.09);}
+    .fact-card .fact-number{font-family:Georgia,serif;color:#f4b23f;font-size:2cqw;font-weight:700;margin-bottom:.6cqw;}
+    .fact-card h3{margin:0 0 .5cqw;color:#f8d59c;font-size:1.25cqw;text-transform:uppercase;}
+    .fact-card p{margin:0;color:#f8e5ca;font-size:1.18cqw;line-height:1.35;}
+    .history-note{font-size:.95cqw;line-height:1.3;color:#e8c9a4;margin:1.1cqw 0 0;padding-left:1cqw;border-left:3px solid var(--gold);}
+    .history-note a{color:#ffd17c;text-decoration:underline;text-underline-offset:2px;}
+
+
+    /* Mascota WALAC: columna derecha, sin tapar el contenido */
+    .view-main{margin-right:14cqw}
+    .info-panel .lead{font-size:1.22cqw}
+    .mascot{position:absolute;right:5.2%;bottom:0;width:12cqw;z-index:2;pointer-events:none;display:flex;flex-direction:column;align-items:center}
+    .mascot img{width:10.4cqw;height:auto;display:block;filter:drop-shadow(0 .6cqw .8cqw rgba(0,0,0,.35))}
+    .mascot-bubble{position:relative;margin:0 0 1.1cqw;background:#fff0d8;color:#4a2415;font-weight:700;font-size:1.05cqw;line-height:1.25;text-align:center;padding:.7cqw .9cqw;border-radius:1.2cqw;box-shadow:0 4px 10px rgba(0,0,0,.28);max-width:100%}
+    .mascot-bubble:after{content:"";position:absolute;left:50%;bottom:-.7cqw;width:1.3cqw;height:1.3cqw;background:#fff0d8;transform:translateX(-50%) rotate(45deg);border-radius:0 0 .3cqw 0}
+    .quiz-wrap{max-width:92%;margin:0 auto;}
+    .quiz-progress{height:.75cqw;min-height:5px;border-radius:50px;background:rgba(255,239,211,.2);overflow:hidden;margin:1cqw 0 1.6cqw;}
+    .quiz-progress span{display:block;height:100%;width:33.33%;background:#edaa26;border-radius:50px;transition:width .2s ease;}
+    .quiz-question{font-family:Georgia,serif;font-size:2.4cqw;line-height:1.15;color:#fff0d8;margin:0 0 1.4cqw;}
+    .answer-list{display:grid;grid-template-columns:1fr 1fr;gap:1.15cqw;}
+    .answer-button{border:1px solid rgba(240,188,105,.75);background:#f5e1c4;color:#4a2415;border-radius:1cqw;padding:1.25cqw 1.4cqw;text-align:left;font-size:1.35cqw;font-weight:700;cursor:pointer;min-height:4.2cqw;}
+    .answer-button:hover:not(:disabled){background:#ffe9c2;transform:translateY(-2px)}
+    .answer-button.correct{background:#d9edcf;border-color:#73a76b;color:#24462a}
+    .answer-button.wrong{background:#f4c9b9;border-color:#bd6c4b;color:#6b2918}
+    .answer-button:disabled{cursor:default;opacity:1}
+    .quiz-feedback{font-size:1.3cqw;line-height:1.35;color:#f7dfbc;min-height:2.7em;margin:1.5cqw 0 1cqw;}
+    .quiz-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+    .quiz-count{font-size:1.15cqw;color:#e8c9a4;}
+    .next-button{border:0;border-radius:999px;background:#e9a21d;color:#482213;font-weight:900;padding:1.1cqw 2.2cqw;font-size:1.2cqw;cursor:pointer;}
+    .next-button:disabled{opacity:.4;cursor:not-allowed}
+    .source-line{font-size:1.0cqw;color:rgba(255,232,200,.72);margin-top:1.3%;}
+    .source-line a{color:#ffd17c;text-decoration:underline;text-underline-offset:2px;}
+
+    .stage-caption{width:min(100%,1536px);display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:9px;color:#bca58c;font-size:11px;}
+    .stage-caption span:last-child{text-align:right}
+
+    .screen-mode{aspect-ratio:16/9;overflow:visible;border-radius:0;box-shadow:none;background:#12100e;}
+    .screen-mode .stage-bg,.screen-mode .stage-shade,.screen-mode .stand-logo{display:none;}
+    .screen-mode .screen-surface{position:relative;left:auto;top:auto;width:100%;height:100%;clip-path:none;border:10px solid #171717;border-radius:18px;box-shadow:0 0 0 2px #4c4c4c,0 15px 35px rgba(0,0,0,.5);}
+    .screen-mode .screen-content{border-radius:7px;}
+    @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <strong>WALAC Museo · Tótem interactivo</strong>
+    <button class="mode-toggle" id="modeToggle" type="button">Ver pantalla táctil</button>
+  </div>
+
+  <main class="museum-stage" id="museumStage" aria-label="Tótem digital de WALAC Museo">
+    <img class="stage-bg" src="museo-totem.png" alt="Tótem interactivo instalado en una sala de museo">
+    <div class="stage-shade"></div>
+    <div class="stand-logo" aria-label="Logo oficial de WALAC">
+      <img src="imagotipo-walac.png" alt="WALAC — Descubre el misterio de tus raíces">
+    </div>
+
+    <section class="screen-surface" aria-label="Pantalla táctil interactiva">
+      <div class="screen-content" id="screenContent">
+        <section class="home-view" id="homeView" aria-label="Menú principal">
+          <div class="hero-glow"></div>
+          <img class="hero-art" src="capullana-hero.png" alt="Ilustración de una mujer capullana con vestimenta y ornamentos">
+          <div class="brand-plaque"><img src="imagotipo-walac.png" alt="Logo WALAC"></div>
+          <div class="hero-copy">
+            <p class="eyebrow">MUJER</p>
+            <h1 class="hero-title">CAPULLANA</h1>
+            <p class="hero-subtitle">Descubre el legado de las mujeres Tallanes.</p>
+            <div class="gold-line"></div>
+          </div>
+
+          <div class="feature-grid">
+            <button class="feature-card" type="button" data-open="who" aria-label="Abrir ¿Quién fue?">
+              <span class="card-art"><img src="art-who.png" alt="Retrato ilustrado de una capullana"></span>
+              <span class="card-copy"><h2>¿Quién fue?</h2><p>Conoce quiénes fueron las capullanas y su papel en la sociedad Tallán.</p><span class="card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4.5 16.5 12 9 19.5"/></svg></span></span>
+            </button>
+            <button class="feature-card" type="button" data-open="legacy" aria-label="Abrir Su poder y legado">
+              <span class="card-art vase"><img src="art-legacy.png" alt="Vasija de inspiración prehispánica"></span>
+              <span class="card-copy"><h2>Su poder y legado</h2><p>Descubre su autoridad, liderazgo e importancia histórica.</p><span class="card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4.5 16.5 12 9 19.5"/></svg></span></span>
+            </button>
+            <button class="feature-card" type="button" data-open="quiz" aria-label="Abrir Explora y aprende">
+              <span class="card-art quiz-art"><img src="art-quiz.png" alt="Tablero de preguntas interactivas"></span>
+              <span class="card-copy"><h2>Explora y aprende</h2><p>Responde preguntas interactivas sobre las capullanas.</p><span class="card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4.5 16.5 12 9 19.5"/></svg></span></span>
+            </button>
+          </div>
+        </section>
+
+        <section class="content-view" id="whoView" aria-label="Quién fue la capullana">
+          <div class="view-top">
+            <div class="view-brand"><img src="imagotipo-walac.png" alt="Logo WALAC"> <span>WALAC MUSEO · HISTORIA TALLÁN</span></div>
+            <button class="back-button" type="button" data-home>← MENÚ PRINCIPAL</button>
+          </div>
+          <div class="view-main">
+            <p class="section-kicker">01 · CONOCE SU HISTORIA</p>
+            <h2 class="section-title">¿Quién fue una capullana?</h2>
+            <div class="two-columns">
+              <div class="info-panel">
+                <p class="lead">Las capullanas fueron mujeres que ejercieron autoridad en determinados curacazgos de la costa norte del antiguo Perú, especialmente en el territorio tallán de Piura.</p>
+                <h3>Señoras y gobernantes</h3>
+                <p>Las crónicas de los primeros contactos con los españoles describieron a mujeres que eran reconocidas como señoras y obedecidas por sus comunidades.</p>
+                <h3>Una historia que se investiga</h3>
+                <p>Los estudios no coinciden en todos los detalles sobre cómo heredaban el poder o cuánto duraba su autoridad. Por eso, conocer a las capullanas también significa comparar testimonios y estudiar las fuentes históricas.</p>
+              </div>
+              <div class="portrait-panel"><img src="capullana-card.png" alt="Ilustración de una mujer capullana"><div class="portrait-caption">Mujeres con autoridad en la sociedad tallán · Costa norte del antiguo Perú</div></div>
+            </div>
+            <p class="history-note">La palabra “capullana” fue usada por cronistas para referirse a mujeres que ejercían cargos de cacicas o señoras principales. Fuentes: <a href="https://repositorio.perueduca.pe/recursos/c-fichas-actividades/secundaria/ciencias-sociales/mujeres-gobernantas-costa-antiguo-peru.pdf" target="_blank" rel="noopener">Ministerio de Educación</a> y <a href="https://walac.pe/dos-perspectivas-historicas-las-capullanas-y-su-poder-en-la-cultura-tallan/" target="_blank" rel="noopener">Walac Noticias</a>.</p>
+          </div>
+          <div class="mascot" aria-hidden="true"><div class="mascot-bubble">¡Acompáñame a descubrir su historia!</div><img src="mascota-walac.png" alt=""></div>
+        </section>
+
+        <section class="content-view" id="legacyView" aria-label="Poder y legado de las capullanas">
+          <div class="view-top">
+            <div class="view-brand"><img src="imagotipo-walac.png" alt="Logo WALAC"> <span>WALAC MUSEO · SU LEGADO</span></div>
+            <button class="back-button" type="button" data-home>← MENÚ PRINCIPAL</button>
+          </div>
+          <div class="view-main">
+            <p class="section-kicker">02 · AUTORIDAD Y MEMORIA</p>
+            <h2 class="section-title">Su poder y legado</h2>
+            <p class="lead">Las capullanas muestran que, en algunos señoríos tallanes, las mujeres podían ocupar posiciones de gobierno y tener un papel decisivo en la vida de su comunidad.</p>
+            <div class="fact-row">
+              <article class="fact-card"><div class="fact-number">01</div><h3>Autoridad</h3><p>Algunas mujeres fueron reconocidas como señoras principales y ejercieron funciones de gobierno en sus curacazgos.</p></article>
+              <article class="fact-card"><div class="fact-number">02</div><h3>Sucesión</h3><p>Las fuentes describen casos en que una hija podía asumir el cargo familiar. Las formas de sucesión variaban y siguen siendo materia de estudio.</p></article>
+              <article class="fact-card"><div class="fact-number">03</div><h3>Memoria viva</h3><p>Su historia forma parte de la memoria cultural de Piura y es una referencia para valorar el liderazgo femenino.</p></article>
+            </div>
+            <p class="history-note">No debe entenderse que todas las comunidades tallanes tuvieron un único sistema político: las fuentes históricas muestran distintas interpretaciones. <a href="https://walac.pe/dos-perspectivas-historicas-las-capullanas-y-su-poder-en-la-cultura-tallan/" target="_blank" rel="noopener">Leer el debate histórico</a>.</p>
+          </div>
+          <div class="mascot" aria-hidden="true"><div class="mascot-bubble">¡Su memoria sigue viva!</div><img src="mascota-walac.png" alt=""></div>
+        </section>
+
+        <section class="content-view" id="quizView" aria-label="Juego de preguntas sobre las capullanas">
+          <div class="view-top">
+            <div class="view-brand"><img src="imagotipo-walac.png" alt="Logo WALAC"> <span>WALAC MUSEO · JUEGO INTERACTIVO</span></div>
+            <button class="back-button" type="button" data-home>← MENÚ PRINCIPAL</button>
+          </div>
+          <div class="view-main" style="display:flex;align-items:center;justify-content:center;">
+            <div class="quiz-wrap" id="quizWrap">
+              <p class="section-kicker">03 · PON A PRUEBA LO QUE APRENDISTE</p>
+              <div class="quiz-actions"><h2 class="section-title" style="margin:0">Explora y aprende</h2><span class="quiz-count" id="quizCount">Pregunta 1 de 3</span></div>
+              <div class="quiz-progress"><span id="quizProgress"></span></div>
+              <h3 class="quiz-question" id="quizQuestion">¿En qué territorio destacaron las capullanas?</h3>
+              <div class="answer-list" id="answerList"></div>
+              <p class="quiz-feedback" id="quizFeedback" aria-live="polite">Elige una respuesta para continuar.</p>
+              <div class="quiz-actions"><span class="quiz-count" id="quizScore">Respuestas correctas: 0</span><button class="next-button" id="nextQuestion" type="button" disabled>SIGUIENTE →</button></div>
+              <p class="source-line">Contenido educativo basado en materiales del <a href="https://repositorio.perueduca.pe/recursos/c-fichas-actividades/secundaria/ciencias-sociales/mujeres-gobernantas-costa-antiguo-peru.pdf" target="_blank" rel="noopener">Ministerio de Educación</a> y estudios difundidos por <a href="https://walac.pe/dos-perspectivas-historicas-las-capullanas-y-su-poder-en-la-cultura-tallan/" target="_blank" rel="noopener">Walac Noticias</a>.</p>
+            </div>
+          </div>
+          <div class="mascot" aria-hidden="true"><div class="mascot-bubble">¡Tú puedes! Elige una respuesta.</div><img src="mascota-walac.png" alt=""></div>
+        </section>
+      </div>
+    </section>
+  </main>
+  <div class="stage-caption"><span>Prototipo interactivo · WALAC Museo</span><span>Haz clic en las tarjetas para explorar. Usa “Menú principal” para volver.</span></div>
+
+  <script>
+    (() => {
+      const stage = document.getElementById('museumStage');
+      const toggle = document.getElementById('modeToggle');
+      const home = document.getElementById('homeView');
+      const views = {
+        who: document.getElementById('whoView'),
+        legacy: document.getElementById('legacyView'),
+        quiz: document.getElementById('quizView')
+      };
+
+      function showHome(){
+        Object.values(views).forEach(view => view.classList.remove('active'));
+        home.style.display = 'block';
+      }
+      function openView(name){
+        home.style.display = 'none';
+        Object.values(views).forEach(view => view.classList.remove('active'));
+        if(views[name]) views[name].classList.add('active');
+        if(name === 'quiz') resetQuiz();
+      }
+      document.querySelectorAll('[data-open]').forEach(button => {
+        button.addEventListener('click', () => openView(button.dataset.open));
+      });
+      document.querySelectorAll('[data-home]').forEach(button => button.addEventListener('click', showHome));
+
+      function setMode(screenOnly){
+        stage.classList.toggle('screen-mode', screenOnly);
+        toggle.textContent = screenOnly ? 'Ver tótem completo' : 'Ver pantalla táctil';
+      }
+      toggle.addEventListener('click', () => setMode(!stage.classList.contains('screen-mode')));
+
+      const questions = [
+        {q:'¿En qué territorio destacaron las capullanas?',a:['En la costa norte, especialmente en Piura','En la selva amazónica','En el altiplano del Collao','En la costa central de Lima'],correct:0,why:'Las fuentes educativas sitúan a las capullanas en señoríos de la costa norte, en el actual territorio de Piura.'},
+        {q:'¿Qué papel podían ejercer algunas capullanas?',a:['Navegantes de expediciones europeas','Autoridades o señoras de sus curacazgos','Comerciantes de la Ruta de la Seda','Emperatrices del Imperio romano'],correct:1,why:'Las crónicas las describen como mujeres con autoridad, reconocidas como señoras y obedecidas por sus comunidades.'},
+        {q:'¿Por qué es importante estudiar su historia?',a:['Porque todas gobernaron del mismo modo','Porque fundaron todas las ciudades del norte','Porque permite conocer el liderazgo femenino en la historia regional','Porque fueron personajes de una leyenda europea'],correct:2,why:'Su historia permite reconocer el papel de algunas mujeres en el gobierno y la memoria cultural del antiguo territorio tallán.'}
+      ];
+      let questionIndex = 0;
+      let score = 0;
+      let answered = false;
+      let completed = false;
+      const questionEl = document.getElementById('quizQuestion');
+      const answerList = document.getElementById('answerList');
+      const feedback = document.getElementById('quizFeedback');
+      const count = document.getElementById('quizCount');
+      const scoreEl = document.getElementById('quizScore');
+      const progress = document.getElementById('quizProgress');
+      const next = document.getElementById('nextQuestion');
+
+      function resetQuiz(){ questionIndex=0; score=0; completed=false; renderQuestion(); }
+      function renderQuestion(){
+        const item=questions[questionIndex];
+        answered=false;
+        count.textContent=`Pregunta ${questionIndex+1} de ${questions.length}`;
+        scoreEl.textContent=`Respuestas correctas: ${score}`;
+        progress.style.width=`${((questionIndex+1)/questions.length)*100}%`;
+        questionEl.textContent=item.q;
+        feedback.textContent='Elige una respuesta para continuar.';
+        next.disabled=true;
+        next.textContent=questionIndex===questions.length-1?'VER RESULTADO':'SIGUIENTE →';
+        answerList.innerHTML='';
+        item.a.forEach((answer,index)=>{
+          const button=document.createElement('button');
+          button.type='button'; button.className='answer-button'; button.textContent=answer;
+          button.addEventListener('click',()=>chooseAnswer(index));
+          answerList.appendChild(button);
+        });
+      }
+      function chooseAnswer(selected){
+        if(answered) return;
+        answered=true;
+        const item=questions[questionIndex];
+        const buttons=[...answerList.querySelectorAll('button')];
+        buttons.forEach((button,index)=>{
+          button.disabled=true;
+          if(index===item.correct) button.classList.add('correct');
+          else if(index===selected) button.classList.add('wrong');
+        });
+        if(selected===item.correct){score++;feedback.textContent=`¡Correcto! ${item.why}`;}
+        else{feedback.textContent=`No es esa respuesta. ${item.why}`;}
+        scoreEl.textContent=`Respuestas correctas: ${score}`;
+        next.disabled=false;
+      }
+      next.addEventListener('click',()=>{
+        if(completed){resetQuiz();return;}
+        if(!answered) return;
+        if(questionIndex<questions.length-1){questionIndex++;renderQuestion();}
+        else{
+          completed=true;
+          questionEl.textContent=`¡Terminaste! Obtuviste ${score} de ${questions.length} respuestas correctas.`;
+          answerList.innerHTML='';
+          feedback.textContent=score===questions.length?'¡Excelente! Ya conoces los puntos principales sobre las capullanas.':'¡Buen intento! Vuelve a explorar las secciones y prueba otra vez.';
+          count.textContent='Actividad completada';
+          progress.style.width='100%';
+          next.textContent='VOLVER A INTENTAR';
+          next.disabled=false;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

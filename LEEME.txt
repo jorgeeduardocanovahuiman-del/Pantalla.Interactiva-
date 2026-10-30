@@ -1,0 +1,19 @@
+WALAC MUSEO — PROTOTIPO INTERACTIVO: MUJER CAPULLANA
+
+CÓMO ABRIRLO
+1. Extrae el archivo ZIP completo.
+2. Abre la carpeta walac_totem.
+3. Haz doble clic en index.html para abrirlo en Chrome, Edge o Firefox.
+4. Pulsa las tres tarjetas de la pantalla para probar la navegación.
+
+FUNCIONES
+- Tótem integrado visualmente en la fotografía de referencia.
+- Logo WALAC proporcionado por el usuario, en la pantalla y en la base del tótem.
+- Tres secciones reales: ¿Quién fue?, Su poder y legado, y Explora y aprende.
+- Botón para volver al menú principal.
+- Juego de tres preguntas con respuestas, corrección y puntaje.
+- Modo de pantalla táctil para ver la interfaz sin el entorno del tótem.
+
+NOTA
+La interfaz está construida con HTML, CSS y JavaScript. La fotografía del tótem funciona como el mockup visual; la interfaz superpuesta es HTML real y sus controles son interactivos.
+El contenido histórico se presenta con cautela y enlaza materiales del Ministerio de Educación y Walac Noticias.
